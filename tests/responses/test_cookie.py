@@ -144,6 +144,18 @@ class DeleteCookieTests(SimpleTestCase):
                 response.delete_cookie(cookie_name)
                 self.assertIs(response.cookies[cookie_name]["secure"], True)
 
+    def test_delete_cookie_http_prefix(self):
+        """
+        delete_cookie() enforces httponly=True if the cookie name starts with
+        __Http- or __Host-Http-.
+        """
+        response = HttpResponse()
+        for prefix in ("__Http-", "__Host-Http-"):
+            with self.subTest(prefix=prefix):
+                cookie_name = f"{prefix}c"
+                response.delete_cookie(cookie_name)
+                self.assertIs(response.cookies[cookie_name]["httponly"], True)
+
     def test_delete_cookie_secure_samesite_none(self):
         # delete_cookie() sets the secure flag if samesite='none'.
         response = HttpResponse()

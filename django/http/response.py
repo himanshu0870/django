@@ -304,16 +304,17 @@ class HttpResponseBase:
         secure = key.startswith(("__Secure-", "__Host-")) or (
             samesite and samesite.lower() == "none"
         )
+        httponly = key.startswith(("__Http-", "__Host-Http-"))
         self.set_cookie(
             key,
             max_age=0,
             path=path,
             domain=domain,
             secure=secure,
+            httponly=httponly,
             expires="Thu, 01 Jan 1970 00:00:00 GMT",
             samesite=samesite,
         )
-
     # Common methods used by subclasses
 
     def make_bytes(self, value):
